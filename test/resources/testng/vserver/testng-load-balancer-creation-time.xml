@@ -1,0 +1,10 @@
+<!--?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Test Suite Load Balancer">
+    <test name="Test Load Balancer Creation Time">
+        <classes>
+            <class name="vserver.hcm03.TestLB4CreationTime"/>
+            <class name="vserver.hcm03.TestLB7CreationTime"/>
+        </classes>
+    </test>
+</suite>
