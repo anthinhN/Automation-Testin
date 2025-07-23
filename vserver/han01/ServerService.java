@@ -1,4 +1,4 @@
-package service.vserver.han01;
+package service.vserver.han;
 
 import com.google.gson.Gson;
 import converter.Converter;
@@ -34,9 +34,8 @@ import java.util.Map;
 import controller.vserver.han01.ServerController;
 
 public class ServerService extends RestService {
-    private static final String baseUri = "https://han-1.console.vngcloud.vn"; //
-    //private static final String baseUri = "https://webhook.site/42c6390d-cb0f-4d42-8970-e5b2a9ef0a2f";
-    private static final String projectId = "pro-bbe49463-5fb8-4701-98e6-115010032b1b"; //input new project id
+    private static final String baseUri = ""; //
+    private static final String projectId = ""; //input new project id
     static RestService restService = new ServerService();
 
     @Override
@@ -52,7 +51,7 @@ public class ServerService extends RestService {
      **/
     //Create server with most OS except for Windows - write separate one
     public static Response createServer(String serverName) {
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers", projectId); // Updated format for basePath
+        String basePath = String.format("", projectId); // Updated format for basePath
         dto.vServerr.request.createServer.createServer createServer = new createServer();
         createServer.setName(serverName);
         createServer.setCreatedFrom("NEW");
@@ -77,12 +76,12 @@ public class ServerService extends RestService {
         createServer.setEncryptionVolume(true);
         createServer.setDataDiskTypeId(null);
         createServer.setExpirePassword(false);
-        createServer.setFlavorId("flav-fb5af089-a662-4257-97fe-65ccb75d85c5"); //fill
+        createServer.setFlavorId(""); //fill
         createServer.setHostGroupId(null);
-        createServer.setImageId("img-306fddf3-2ec1-4755-9da6-53ed33899e14"); //fill
+        createServer.setImageId(""); //fill
 
-        createServer.setNetworkId("net-00728aef-1e32-4fd5-8ac6-cff3462dfa90"); //
-        createServer.setSubnetId("sub-cc60d996-0749-46d7-8bd8-f5497df3f62b");
+        createServer.setNetworkId(""); //
+        createServer.setSubnetId("");
 
         //createServer.setNetworkId(networkId);
         //createServer.setSubnetId(subnetId);
@@ -90,10 +89,10 @@ public class ServerService extends RestService {
         createServer.setOsLicence(false);
 
         createServer.setRootDiskEncryptionType(null);
-        createServer.setRootDiskTypeId("vtype-7a7a8610-34f5-11ee-be56-0242ac120002"); //fill
+        createServer.setRootDiskTypeId(""); //fill
 
         ArrayList<String> secGroup = new ArrayList<>();
-        secGroup.add("secg-5f1884c2-05e8-4120-b8d6-1b3bd8d827c3"); //fill
+        secGroup.add(""); //fill
 
         createServer.setSecurityGroup(secGroup);
         createServer.setServerGroupId(null);
@@ -104,41 +103,25 @@ public class ServerService extends RestService {
         createServer.setUserPassword(null); //fill -
         createServer.setUserData(null);
         createServer.setUserDataBase64Encoded(false);
-
-        // Print the request payload for debugging
-        System.out.println("Request Payload: " + createServer.toString());
-
+        
         Response response = restService.sendPostRequest(baseUri, basePath, createServer);
-
-        // Print the response for debugging
-        System.out.println("Create Server Response: " + response.getBody().asString());
-
         return response;
-        //return restService.sendPostRequest(baseUri, basePath, createServer);
     }
 
     public static GetServerListData getListServerResponse() {
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers?name=&page=1&size=10&isCache=false", projectId);
+        String basePath = String.format("", projectId);
         Response response = restService.sendGetRequest(baseUri, basePath);
-
-        //debugging
-        //System.out.println("Print out ListData: " + response.getBody().asString());
-
         return Converter.convertJSONToDTO(response.asString(), GetServerListData.class) ;
     }
 
     public static GetResponseVolumeByServerData getVolumeResponseInServer(String serverId){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/volumes/servers/%s" ,projectId,serverId);
+        String basePath = String.format("" ,projectId,serverId);
         Response response = restService.sendGetRequest(baseUri, basePath);
-
-        //debug
-        //System.out.println("Response body "+ response.getBody().asString());
-
         return Converter.convertJSONToDTO(response.asString(), GetResponseVolumeByServerData.class);
     }
 
     public static GetResponseActionsOfServerData getHistoryActionInServer(String serverID){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers/%s/actions", projectId, serverID);
+        String basePath = String.format("", projectId, serverID);
         Response response = restService.sendGetRequest(baseUri,basePath);
 
 
@@ -146,13 +129,13 @@ public class ServerService extends RestService {
     }
 
     public static SecGroupResponse getSecGroupResponse(String serverID){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers/%s/sec-groups", projectId,serverID);
+        String basePath = String.format("", projectId,serverID);
         Response response = restService.sendGetRequest(baseUri,basePath);
         return Converter.convertJSONToDTO(response.asString(), SecGroupResponse.class);
     }
 
     public static GetGeneralInformationServerData getGeneralInformationServerData(String serverID){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers/%s/", projectId, serverID);
+        String basePath = String.format("", projectId, serverID);
         Response response = restService.sendGetRequest(baseUri, basePath);
 
         // Print the response body for debugging
@@ -162,20 +145,20 @@ public class ServerService extends RestService {
     }
 
     public static Data getServerDetails(String serverID){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers/%s", projectId,serverID);
+        String basePath = String.format("", projectId,serverID);
         Response response = restService.sendGetRequest(baseUri,basePath);
         return Converter.convertJSONToDTO(response.asString(),Data.class);
     }
     public static void deleteServer(String serverName) {
         String serverId = ServerController.getServerId(serverName);
         String body = "{\"deleteAllVolume\": false}";
-        String basePath = String.format("/vserver/iam-vserver-gateway/v2/%s/servers/%s", projectId, serverId); // Updated format for basePath
+        String basePath = String.format("", projectId, serverId); // Updated format for basePath
         restService.sendDeleteRequest(baseUri, basePath, body);
     }
 
     /**Network Interface related**/
     public static GetResponseNetworkInterfaceOfServerData getResponseNetworkInterfaceOfServerData(String serverId){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers/%s/network-interfaces", projectId, serverId);
+        String basePath = String.format("", projectId, serverId);
         Response response = restService.sendGetRequest(baseUri,basePath);
         return Converter.convertJSONToDTO(response.asString(), GetResponseNetworkInterfaceOfServerData.class);
     }
@@ -186,31 +169,31 @@ public class ServerService extends RestService {
 
     //Get service
     public  static ServerGroupListDataResponse ServerGroupListDataResponse() {
-        String basePath = String.format("/v1/projects/%s/serverGroups", projectId);
+        String basePath = String.format("", projectId);
         Response response = restService.sendGetRequest(baseUri,basePath);
         return Converter.convertJSONToDTO(response.asString(), ServerGroupListDataResponse.class);
     }
 
     //Get server group response data
     public static ServerGroupData serverGroupData(String serverGroupID) {
-        String basePath = String.format("/v1/projects/%s/serverGroups", projectId,serverGroupID);
+        String basePath = String.format("", projectId,serverGroupID);
         Response response = restService.sendGetRequest(baseUri,basePath);
         return Converter.convertJSONToDTO(response.asString(), ServerGroupData.class);
     }
 
     //create server group
     public static Response createServerGroup(String serverGroupName){
-        String basePath = String.format("/vserver/iam-vserver-gateway/v1/projects/%s/serverGroups", projectId);
+        String basePath = String.format("", projectId);
         dto.vServerr.request.serverGroup.CreateServerGroup createServerGroup = new CreateServerGroup();
         createServerGroup.setName(serverGroupName);
         createServerGroup.setDescription("rrr");
-        createServerGroup.setPolicyId("aaa7d316-cff2-11eb-b8bc-0242ac130003");
+        createServerGroup.setPolicyId("");
         return restService.sendPostRequest(baseUri,basePath, createServerGroup);
     }
 
     //delete service group request - check again
     public static void deleteServerGroup(String serverGroupID){
-        String basePath = String.format("/v1/projects/%s/serverGroups/%s", projectId, serverGroupID);
+        String basePath = String.format("", projectId, serverGroupID);
         restService.sendDeleteRequest(baseUri,basePath);
     }
 
@@ -222,15 +205,15 @@ public class ServerService extends RestService {
 
     //create subnet
     public static Response createSubnet(String networkId){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/networks/%s/subnets", projectId,networkId);
+        String basePath = String.format(", projectId,networkId);
         CreateSubnet createSubnet = new CreateSubnet();
         createSubnet.setName("testSubnet1345");
-        createSubnet.setCidr("10.3.0.0/24");
+        createSubnet.setCidr("");
         return restService.sendPostRequest(baseUri, basePath, createSubnet);
     }
     //get service
     public static GetSubnetListData getSubnetListData(String networkId) {
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/networks/%s/subnets", projectId, networkId);
+        String basePath = String.format("", projectId, networkId);
         Response response = restService.sendGetRequest(baseUri,basePath);
 
         System.out.println("The response body is " + response.getBody().asString());
@@ -239,14 +222,14 @@ public class ServerService extends RestService {
 
     //delete request - check again
     public static void deleteSubnet(String networkId, String subnetID) {
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/networks/%s/subnets/%s", projectId, networkId, subnetID);
+        String basePath = String.format("", projectId, networkId, subnetID);
         restService.sendDeleteRequest(baseUri, basePath);
     }
 
 
     /** SSH Key related **/
     public static Response SShCreateRequest(String sshName){
-        String basePath = String.format("/v1/projects/%s/", projectId); //filled with ssh base path
+        String basePath = String.format("", projectId); //filled with ssh base path
         SSHCreateRequest sshCreateRequest = new SSHCreateRequest();
         sshCreateRequest.setName(sshName);
         return restService.sendPostRequest(baseUri, basePath, sshCreateRequest);
@@ -261,25 +244,25 @@ public class ServerService extends RestService {
 
     //get service
     public static dto.vServerr.response.ssh.SSHList getSSHList(){
-        String basePath = String.format("/v1/projects/%s/", projectId);
+        String basePath = String.format("", projectId);
         Response response = restService.sendGetRequest(baseUri,basePath);
         return Converter.convertJSONToDTO(response.asString(), dto.vServerr.response.ssh.SSHList.class);
     }
 
    public static dto.vServerr.response.ssh.SSHCreateResponse sshCreateResponse(){
-       String basePath = String.format("/v1/projects/%s/", projectId);
+       String basePath = String.format("", projectId);
        Response response = restService.sendGetRequest(baseUri,basePath);
        return Converter.convertJSONToDTO(response.asString(), SSHCreateResponse.class);
    }
 
    public static dto.vServerr.response.ssh.SSHInvalidResponse sshInvalidResponse(){
-       String basePath = String.format("/v1/projects/%s/", projectId);
+       String basePath = String.format("", projectId);
        Response response = restService.sendGetRequest(baseUri,basePath);
        return Converter.convertJSONToDTO(response.asString(), dto.vServerr.response.ssh.SSHInvalidResponse.class);
    }
 
     public static dto.vServerr.response.ssh.SSHData sshData(){
-        String basePath = String.format("/v1/projects/%s/", projectId);
+        String basePath = String.format("", projectId);
         Response response = restService.sendGetRequest(baseUri,basePath);
         return Converter.convertJSONToDTO(response.asString(), dto.vServerr.response.ssh.SSHData.class);
     }
@@ -288,7 +271,7 @@ public class ServerService extends RestService {
      * network
      **/
     public static Response createNetwork(String networkName){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/networks", projectId);
+        String basePath = String.format("v", projectId);
         CreateNetwork createNetwork = new CreateNetwork();
         createNetwork.setName(networkName);
         createNetwork.setCidr("10.3.0.0/16");
@@ -303,43 +286,43 @@ public class ServerService extends RestService {
     }
 
     public static void DeleteNetwork(String networkID){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/networks/%s",projectId, networkID);
+        String basePath = String.format("",projectId, networkID);
         restService.sendDeleteRequest(baseUri,basePath);
     }
 
     //get list of server
     public static GetVPCListData getVPCListData(){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/networks?name=&page=1&size=10", projectId);
+        String basePath = String.format("", projectId);
         Response response = restService.sendGetRequest(baseUri,basePath);
         return Converter.convertJSONToDTO(response.asString(),GetVPCListData.class);
     }
 
     /**Server Action related**/
     public static ConsoleResponseAction consoleResponseAction(String serverId){
-        String basepath = String.format("/vserver/iam-vserver-gateway/v2/%s/servers/%s/console-url", projectId,serverId);
+        String basepath = String.format("", projectId,serverId);
         Response response = restService.sendGetRequest(baseUri,basepath);
         return Converter.convertJSONToDTO(response.asString(), ConsoleResponseAction.class);
     }
     /**Server status related**/
     public static Response ChangeToStartStatusOfServer(String serverId){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers/%s/start", projectId,serverId);
+        String basePath = String.format("", projectId,serverId);
         Response response = restService.sendPutRequest(baseUri, basePath);
         return response;
     }
     public static Response ChangeToShutdownStatusOfServer(String serverId){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers/%s/stop", projectId,serverId);
+        String basePath = String.format("", projectId,serverId);
         Response response = restService.sendPutRequest(baseUri, basePath);
         return response;
     }
 
     public static Response ChangeToRebootStatusOfServer(String serverId){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers/%s/reboot", projectId,serverId);
+        String basePath = String.format("", projectId,serverId);
         Response response = restService.sendPutRequest(baseUri, basePath);
         return response;
     }
     /**Resize Server**/
     public static Response ResizeServer(String serverId){
-        String basePath = String.format("vserver/iam-billing-gateway/v1/%s/orders", projectId);
+        String basePath = String.format("", projectId);
         ResizeRequestInServer resizeRequestInServer = new ResizeRequestInServer();
 
         resizeRequestInServer.setRespurceType("server");
@@ -347,7 +330,7 @@ public class ServerService extends RestService {
 
         ResourceInfo resourceInfo = new ResourceInfo();
         resourceInfo.setServerId(serverId);
-        resourceInfo.setFlavorId("flav-8066e9ff-5d80-4e8f-aeae-9e8a934bfc44");
+        resourceInfo.setFlavorId("");
         resourceInfo.setHostGroupId(null);
         resizeRequestInServer.setResourceInfo(resourceInfo);
 
@@ -357,14 +340,14 @@ public class ServerService extends RestService {
     }
 
     public static Response ResizeServerDown(String serverId){
-        String basePath = String.format("vserver/iam-billing-gateway/v1/%s/orders", projectId);
+        String basePath = String.format(", projectId);
         ResizeRequestInServer resizeRequestInServer = new ResizeRequestInServer();
         resizeRequestInServer.setRespurceType("server");
         resizeRequestInServer.setAction("resize");
 
         ResourceInfo resourceInfo = new ResourceInfo();
         resourceInfo.setServerId(serverId);
-        resourceInfo.setFlavorId("flav-17cd35e6-e063-4129-bb00-f627e248951a");
+        resourceInfo.setFlavorId("");
         resourceInfo.setHostGroupId(null);
         resizeRequestInServer.setResourceInfo(resourceInfo);
 
@@ -377,7 +360,7 @@ public class ServerService extends RestService {
     }
     /**Rename Server**/
     public static Response RenameServer(String serverId){
-        String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers/%s/rename", projectId, serverId);
+        String basePath = String.format("", projectId, serverId);
         CreateRenameServerRequest createRenameServerRequest = new CreateRenameServerRequest();
         createRenameServerRequest.setNewName("thinhna02");
         Response response = restService.sendPutRequest(baseUri,basePath,createRenameServerRequest);
@@ -385,7 +368,7 @@ public class ServerService extends RestService {
     }
      /**Image Server Service Related**/
      public static Response CreateImage(String serverId){
-         String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/user-images/servers/%s", projectId, serverId);
+         String basePath = String.format("", projectId, serverId);
          CreateImageServerAction createImageServerAction = new CreateImageServerAction();
          createImageServerAction.setName("ImageTest");
          ArrayList<String> tags = new ArrayList<>();
@@ -403,11 +386,11 @@ public class ServerService extends RestService {
 
      /**Update security Group**/
      public static Response UpdateSecurity(String serverId){
-         String basePath = String.format("vserver/iam-vserver-gateway/v2/%s/servers/%s/update-sec-group", projectId, serverId);
+         String basePath = String.format("", projectId, serverId);
          UpdateSecurityInServerAction updateSecurityInServerAction = new UpdateSecurityInServerAction();
 
          ArrayList<String> securityGroup = new ArrayList<>();
-         securityGroup.add("secg-7a017218-681d-48f5-8b75-c524629a01f8");
+         securityGroup.add("");
          updateSecurityInServerAction.setSecurityGroup(securityGroup);
 
          //System.out.println("Request Body: " + new Gson().toJson(updateSecurityInServerAction)); // Print the request body
